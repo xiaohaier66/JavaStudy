@@ -1,6 +1,7 @@
 package com.xiaohaier66.Stream;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -18,6 +19,15 @@ public class InitStream {
 
         IntStream stream4 = IntStream.rangeClosed(1,5);
         stream4.forEach(System.out::print);
+
+        Stream<String> stream5 = Stream.of("we are dharma");
+        stream5.forEach(System.out::println);
+
+        Stream<String> stream6 = Stream.of("we","are","dharma","2018");
+        stream6.forEach(System.out::println);
+
+//        Stream<Integer> stream7 = Stream.generate(new Random().nextInt());
+//        stream7.limit(10).forEach(System.out::println);
     }
 
     private static Stream<String> initByBuilder(){
