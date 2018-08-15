@@ -74,6 +74,20 @@ public class StudentStream {
             o("Can not find such student");
         }
 
+        //Sum of credits
+        Integer sumCredit = students.stream()
+                .reduce(0,
+                        (Integer middleSum,Student student)->{
+                    o(Thread.currentThread().getName()+" "+
+                    student.getName()+" "+
+                    student.getCredit());
+                    return middleSum + student.getCredit();
+                        },
+                        (a,b) -> {
+                    o(Thread.currentThread().getName());
+                    return null;
+                        });
+
 
 
     }
