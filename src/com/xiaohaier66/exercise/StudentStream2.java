@@ -3,11 +3,9 @@ package com.xiaohaier66.exercise;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class StudentStream {
+public class StudentStream2 {
     private static List<Student> register(){
         Student s1 = new Student(1L,"ZhangHamwen",Student.Gender.MALE,100, LocalDate.of(2016, Month.SEPTEMBER,3),Student.Department.AM);
         Student s2 = new Student(2L,"SunJiaoyong",Student.Gender.FEMALE,90, LocalDate.of(2016, Month.SEPTEMBER,3),Student.Department.CL);
@@ -76,75 +74,21 @@ public class StudentStream {
         }
 
         //Sum of credits
-//        Integer sumCredit = students.stream()
-////                串行计算，没有合并操作，后边的合并类操作reduce单纯将中间值得整型变成一个可接受的类型
-//                .reduce(0,
-//                        (Integer middleSum,Student student)->{
-//                    o(Thread.currentThread().getName()+" "+
-//                    student.getName()+" "+
-//                    student.getCredit());
-//                    return middleSum + student.getCredit();
-//                        },
-//                        (a,b) -> {
-//                    o(Thread.currentThread().getName());
-//                    //单纯把中间值的整型变成一个可接受的类型，下一行并不返回有效值
-//                    return null;
-//                        });
-        Integer sumCredit = students.parallelStream()
+        Integer sumCredit = students.stream()
 //                串行计算，没有合并操作，后边的合并类操作reduce单纯将中间值得整型变成一个可接受的类型
                 .reduce(0,
-                        (Integer partialSum,Student student)->{
-
-                    Integer middleSum = partialSum + student.getCredit();
+                        (Integer middleSum,Student student)->{
                     o(Thread.currentThread().getName()+" "+
-                            student.getName()+" "+
-                            student.getCredit());
-                    return middleSum;
+                    student.getName()+" "+
+                    student.getCredit());
+                    return middleSum + student.getCredit();
                         },
                         (a,b) -> {
-                    o(Thread.currentThread().getName()+b);
+                    o(Thread.currentThread().getName());
                     //单纯把中间值的整型变成一个可接受的类型，下一行并不返回有效值
-                    return a + b;
+                    return null;
                         });
 
-
-        LongSummaryStatistics creditStats = students.stream()
-                .map(Student::getCredit)
-                //collect 是终端操作
-                .collect(LongSummaryStatistics::new,
-                        LongSummaryStatistics::accept,
-                        LongSummaryStatistics::combine);
-        o("Credit Stats: "+creditStats);
-
-        LongSummaryStatistics creditStats2 = students.stream()
-                .collect(Collectors.summarizingLong(Student::getCredit));
-        o("Credit sum: "+creditStats2);
-
-        Double creditAvg = students.stream()
-                .collect(Collectors.averagingDouble(Student::getCredit));
-        o("Credit average: "+creditAvg);
-
-        Map<Long,String> idNameMap = students.stream()
-                .collect(Collectors.toMap(Student::getId,Student::getName));
-        o("Map<Id,Name>: " +idNameMap);
-
-        Map<String,Student.Department> departmentStringMap = students.stream()
-                .collect(Collectors.toMap(Student::getName,Student::getDepartment));
-        o("Map<Name,Department>: " +departmentStringMap);
-
-        String names = students.stream()
-                .map(Student::getName)
-                .collect(Collectors.joining(", ","XUPT-[ "," ]-Network"));
-        o(names);
-
-        Optional<Student> hasFemale = students.stream()
-                .filter(Student::isFeMale)
-                .findAny();
-        if(hasFemale.isPresent()){
-            o("Yes, we have female students: "+hasFemale.get().getName());
-        }else {
-            o("Sorry, we have no female student");
-        }
 
 
     }
